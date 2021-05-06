@@ -1,3 +1,25 @@
-$primary: #368AB6;
-$secondary: #D1D3D4;
-$dark: #2A2A2A;
+@import "~bootstrap/scss/functions";
+
+$primary: #368ab6;
+$secondary: #d1d3d4;
+$dark: #2a2a2a;
+
+$font-family-base: "Open Sans", sans-serif;
+$font-family-heading: Lato, sans-serif;
+$card-border-color: $dark;
+
+@import "~bootstrap/scss/variables";
+
+$heading-font-sizes: (
+  "h1": (
+    "md": $h2-font-size,
+    "sm": $h3-font-size,
+  ),
+  "h2": (
+    "sm": $h3-font-size,
+    "xs": $h4-font-size,
+  ),
+  "h3": (
+    "xs": $h4-font-size,
+  ),
+);

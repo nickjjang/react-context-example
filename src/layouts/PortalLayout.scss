@@ -1,8 +1,12 @@
+@import "../assets/scss/variables";
+
 .portal-layout {
+  padding-top: $grid-gutter-width;
+  padding-bottom: $grid-gutter-width;
   max-width: 700px;
   .portal-logo {
-      text-align: center;
-      margin: auto;
-      display: block;
+    text-align: center;
+    margin: auto;
+    display: block;
   }
 }

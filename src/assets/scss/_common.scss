@@ -1,0 +1,34 @@
+body {
+  background-color: $secondary;
+}
+
+@each $breakpoint in map-keys($grid-breakpoints) {
+  @include media-breakpoint-up($breakpoint) {
+  }
+}
+
+@each $name, $font-sizes in $heading-font-sizes {
+  #{$name},
+  .#{$name} {
+    @each $breakpoint, $font-size in $font-sizes {
+      @include media-breakpoint-down($breakpoint) {
+        font-size: $font-size;
+      }
+    }
+  }
+}
+
+@for $i from 1 through 6 {
+  h#{$i},
+  .h#{$i} {
+    font-family: $font-family-heading;
+  }
+}
+
+label {
+  font-weight: bold;
+}
+
+html {
+  font-size: 14px;
+}

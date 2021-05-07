@@ -1,3 +1,5 @@
+import { TEST_RESULT, YES_NO } from "./configs/enums";
+
 export default {
   patients: [
     {
@@ -31,6 +33,60 @@ export default {
       city: "New York",
       state: "New York",
       zipCode: "58100",
+    },
+  ],
+  testRecords: [
+    {
+      Id: "1",
+      CollectorId: "1",
+      ReaderId: "1",
+      SampleCollectedOn: "2020-01-01",
+      SampleCollectedBy: "Results",
+      TestRunBy: "result",
+      TestStartDate: "2020-01-01",
+      TestEndDate: "2020-01-01",
+      TestComplete: YES_NO.YES,
+      TestResult: TEST_RESULT.POSITIVE,
+      TestPhoto: null,
+    },
+    {
+      Id: "2",
+      CollectorId: "2",
+      ReaderId: "1",
+      SampleCollectedOn: "2020-01-01",
+      SampleCollectedBy: "Results",
+      TestRunBy: "result",
+      TestStartDate: "2020-01-01",
+      TestEndDate: "2020-01-01",
+      TestComplete: YES_NO.YES,
+      TestResult: TEST_RESULT.NEGATIVE,
+      TestPhoto: null,
+    },
+    {
+      Id: "3",
+      CollectorId: "3",
+      ReaderId: "1",
+      SampleCollectedOn: "2020-01-01",
+      SampleCollectedBy: "Results",
+      TestRunBy: "result",
+      TestStartDate: "2020-01-01",
+      TestEndDate: "2020-01-01",
+      TestComplete: YES_NO.YES,
+      TestResult: TEST_RESULT.ERROR,
+      TestPhoto: null,
+    },
+    {
+      Id: "4",
+      CollectorId: "3",
+      ReaderId: "1",
+      SampleCollectedOn: "2020-01-01",
+      SampleCollectedBy: "Results",
+      TestRunBy: "result",
+      TestStartDate: "2020-01-01",
+      TestEndDate: "2020-01-01",
+      TestComplete: YES_NO.YES,
+      TestResult: TEST_RESULT.NO_RESULT,
+      TestPhoto: null,
     },
   ],
 };

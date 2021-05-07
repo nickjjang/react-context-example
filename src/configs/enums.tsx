@@ -30,3 +30,10 @@ export enum YES_NO {
   YES = "yes",
   NO = "no",
 }
+
+export enum TEST_RESULT {
+  POSITIVE = "Positive",
+  NEGATIVE = "Negative",
+  ERROR = "Error",
+  NO_RESULT = "No Result",
+}

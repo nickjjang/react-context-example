@@ -30,7 +30,7 @@ const SearchPatients = (): React.ReactElement => {
       <Helmet>
         <title>Search Patients - Aptitude</title>
         <meta name="description" content="Search Patients" />
-        <body className="page-search-patients" />
+        <body className="page-patients" />
       </Helmet>
       <Card>
         <CardBody>

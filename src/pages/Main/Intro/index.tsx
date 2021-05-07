@@ -14,13 +14,13 @@ const Intro = (): React.ReactElement => {
   const history = useHistory();
 
   const handleRegistePatient = () => {
-    history.push("/search-patients");
+    history.push("/patients");
   };
   const handleStartATest = () => {
     history.push("/collector-to-reader");
   };
   const handleSearchTestRecords = () => {
-    history.push("/search-test-records");
+    history.push("/test-records");
   };
   const handleBulkUpload = () => {
     history.push("/bulk-upload");

@@ -26,6 +26,7 @@ export interface ReaderModel {
 }
 
 export interface TestModel {
+  Id: string | null;
   CollectorId?: string | null;
   ReaderId?: string | null;
   SampleCollectedOn?: string | Date | null;

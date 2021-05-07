@@ -1,50 +1,39 @@
 import React from "react";
+import QrReader from "react-qr-reader";
 import {
   Button,
-  CustomInput,
   FormGroup,
-  Label,
   Modal,
   ModalBody,
   ModalFooter,
   ModalHeader,
 } from "reactstrap";
+import "./QRScannerModal.scss";
 
 interface QRScannerProps {
-  open: boolean;
+  isOpen: boolean;
   toggle: () => void;
-  onQRScanned: (qrcode: string) => void;
+  onQRScanned: (qrcode: string | null) => void;
 }
 
-const QRScannerModal = ({ open, toggle, onQRScanned }: QRScannerProps) => {
+const QRScannerModal = ({ isOpen, toggle, onQRScanned }: QRScannerProps) => {
+  const handleQRScanned = (result: string | null) => {
+    onQRScanned(result);
+    toggle();
+  };
   return (
-    <Modal isOpen={open} toggle={toggle} className="qrscanner-modal">
+    <Modal isOpen={isOpen} toggle={toggle} className="qrscanner-modal">
       <ModalHeader toggle={toggle}>QR Scanner</ModalHeader>
       <ModalBody>
         <FormGroup>
-          <div className="video-container">
-            <video className="video"></video>
-          </div>
-        </FormGroup>
-        <FormGroup>
-          <Label for="imageFileBrowser">Browse a image</Label>
-          <CustomInput
-            className="imageFile"
-            type="file"
-            id="imageFileBrowser"
-            name="imageFile"
-            label="Pick a QR image"
+          <QrReader
+            onError={(error) => {
+              console.log(error);
+            }}
+            onScan={handleQRScanned}
           />
         </FormGroup>
       </ModalBody>
-      <ModalFooter>
-        <Button color="secondary" onClick={toggle} className="mr-2">
-          Cancel
-        </Button>
-        <Button color="primary" onClick={toggle}>
-          OK
-        </Button>
-      </ModalFooter>
     </Modal>
   );
 };

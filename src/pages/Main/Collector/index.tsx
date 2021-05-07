@@ -1,6 +1,6 @@
 import { faQrcode } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Formik } from "formik";
+import { useFormik } from "formik";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import Helmet from "react-helmet";
@@ -20,6 +20,7 @@ import {
   Row,
 } from "reactstrap";
 import * as Yup from "yup";
+import QRScannerModal from "../../../components/QRScannerModal";
 import data from "../../../data";
 import { PatientModel } from "../../../models";
 
@@ -32,21 +33,45 @@ const CollectorSchema = Yup.object().shape({
 });
 
 const Collector = (props: any): React.ReactElement => {
-  const initialValues: CollectorFormValues = { collectorCode: "" };
+  // States
   const [patient, setPatient] = useState<PatientModel | null>(null);
+  const [isQRScannerOpen, setIsQRScannerOpen] = useState(false);
+
+  // History for routing
   const history = useHistory();
+
+  // Handle collecting done
   const handleDone = async (values: CollectorFormValues) => {
     console.log(values);
   };
+
+  // Handle cancel
+  const handleCancel = () => {
+    history.push("/");
+  };
+
+  const toggleQRScanner = () => {
+    setIsQRScannerOpen(!isQRScannerOpen);
+  };
+
+  const handleQRScanned = (qr: string | null) => {
+    formik.setFieldValue("collectorCode", qr);
+  };
+
+  // Collector Formik Initial Values
+  const initialValues: CollectorFormValues = { collectorCode: "" };
+
+  // Formik
+  const formik = useFormik({
+    initialValues,
+    validationSchema: CollectorSchema,
+    onSubmit: handleDone,
+  });
 
   useEffect(() => {
     console.log(props);
     setPatient(data.patients[0]);
   }, [props]);
-
-  const handleCancel = () => {
-    history.push("/");
-  };
 
   return (
     <>
@@ -57,12 +82,15 @@ const Collector = (props: any): React.ReactElement => {
       </Helmet>
       <Card>
         <CardBody>
-          <Formik
-            initialValues={initialValues}
-            validationSchema={CollectorSchema}
-            onSubmit={handleDone}
-          >
-            {({ errors, touched, values, handleSubmit, handleChange }) => (
+          {(() => {
+            const {
+              errors,
+              touched,
+              values,
+              handleSubmit,
+              handleChange,
+            } = formik;
+            return (
               <Form onSubmit={handleSubmit}>
                 <h4 className="text-center">
                   <strong>Scan or type in the collector code below</strong>
@@ -78,7 +106,7 @@ const Collector = (props: any): React.ReactElement => {
                       invalid={touched.collectorCode && !!errors.collectorCode}
                     />
                     <InputGroupAddon addonType="append">
-                      <Button type="button">
+                      <Button type="button" onClick={toggleQRScanner}>
                         <FontAwesomeIcon icon={faQrcode} />
                       </Button>
                     </InputGroupAddon>
@@ -119,14 +147,19 @@ const Collector = (props: any): React.ReactElement => {
                     Cancel
                   </Button>
                   <Button type="submit" color="primary">
-                    Submit
+                    Done
                   </Button>
                 </FormGroup>
               </Form>
-            )}
-          </Formik>
+            );
+          })()}
         </CardBody>
       </Card>
+      <QRScannerModal
+        isOpen={isQRScannerOpen}
+        toggle={toggleQRScanner}
+        onQRScanned={handleQRScanned}
+      />
     </>
   );
 };

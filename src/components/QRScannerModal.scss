@@ -1,0 +1,10 @@
+@import "../assets/scss/variables";
+
+.qrscanner-modal {
+  .video-container {
+    background-color: $black;
+    video {
+      width: 100%;
+    }
+  }
+}

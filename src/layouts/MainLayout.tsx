@@ -5,7 +5,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useContext, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { NavLink, useHistory } from "react-router-dom";
 import {
   Collapse,
   Container,
@@ -40,7 +40,7 @@ const MainLayout = (props: MainLayoutProps): React.ReactElement => {
   return (
     <div className="main-layout">
       <Navbar color="dark" dark expand>
-        <NavbarBrand href="/" className="mr-auto">
+        <NavbarBrand to="/" className="mr-auto" tag={NavLink}>
           <img src={logo} />
         </NavbarBrand>
         <NavbarToggler onClick={toggleNavbar} className="mr-2" />

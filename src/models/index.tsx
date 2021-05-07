@@ -1,3 +1,5 @@
+import { YES_NO } from "../configs/enums";
+
 export interface PatientModel {
   id?: string;
   firstName?: string;
@@ -16,4 +18,22 @@ export interface PatientModel {
   zipCode?: string;
   password?: string;
   confirmPassword?: string;
+}
+
+export interface ReaderModel {
+  id?: string;
+  status?: string;
+}
+
+export interface TestModel {
+  CollectorId?: string | null;
+  ReaderId?: string | null;
+  SampleCollectedOn?: string | Date | null;
+  SampleCollectedBy?: string | null;
+  TestRunBy?: string;
+  TestStartDate?: string | Date | null;
+  TestEndDate?: string | Date | null;
+  TestComplete?: YES_NO | null;
+  TestResult?: string | null;
+  TestPhoto?: string | null;
 }

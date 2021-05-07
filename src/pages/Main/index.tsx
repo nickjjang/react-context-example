@@ -5,10 +5,12 @@ import { AppContext } from "../../App";
 import * as Guards from "../../Guards";
 import MainLayout from "../../layouts/MainLayout";
 import Page404 from "../Errors/Page404";
-import Collector from "./Collector";
+import CollectorToReader from "./CollectorToReader";
+import PatientToCollector from "./PatientToCollector";
 import Intro from "./Intro";
 import RegisterPatient from "./RegisterPatient";
 import SearchPatients from "./SearchPatients";
+import SearchTestRecords from "./SearchTestRecords";
 
 const App = (): React.ReactElement => {
   const { state } = useContext(AppContext);
@@ -31,8 +33,20 @@ const App = (): React.ReactElement => {
           />
           <GuardedRoute
             exact
-            path="/collector/:id"
-            component={Collector}
+            path="/patient-to-collector/:id"
+            component={PatientToCollector}
+            meta={state}
+          />
+          <GuardedRoute
+            exact
+            path="/collector-to-reader"
+            component={CollectorToReader}
+            meta={state}
+          />
+          <GuardedRoute
+            exact
+            path="/search-test-records"
+            component={SearchTestRecords}
             meta={state}
           />
         </GuardProvider>

@@ -17,7 +17,7 @@ const Intro = (): React.ReactElement => {
     history.push("/search-patients");
   };
   const handleStartATest = () => {
-    history.push("/start-a-test");
+    history.push("/collector-to-reader");
   };
   const handleSearchTestRecords = () => {
     history.push("/search-test-records");

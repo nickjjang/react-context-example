@@ -13,6 +13,11 @@ import {
   Label,
 } from "reactstrap";
 import * as Yup from "yup";
+import {
+  ETHNICITY_LIST,
+  GENDER_LIST,
+  RACE_LIST,
+} from "../../../configs/constants";
 import { PatientModel } from "../../../models";
 
 const RegisterPatientSchema = Yup.object().shape({
@@ -148,8 +153,9 @@ const RegisterPatient = (): React.ReactElement => {
                     invalid={touched.gender && !!errors.gender}
                   >
                     <option>-Please select-</option>
-                    <option value="male">Male</option>
-                    <option value="female">Female</option>
+                    {GENDER_LIST.map(({ label, value }) => (
+                      <option value={value}>{label}</option>
+                    ))}
                   </Input>
                   <FormFeedback>{errors.gender}</FormFeedback>
                 </FormGroup>
@@ -164,9 +170,9 @@ const RegisterPatient = (): React.ReactElement => {
                     invalid={touched.race && !!errors.race}
                   >
                     <option>-Please select-</option>
-                    <option value="1">Hispanic</option>
-                    <option value="2">Black</option>
-                    <option value="3">Asian</option>
+                    {RACE_LIST.map(({ label, value }) => (
+                      <option value={value}>{label}</option>
+                    ))}
                   </Input>
                   <FormFeedback>{errors.race}</FormFeedback>
                 </FormGroup>
@@ -181,9 +187,9 @@ const RegisterPatient = (): React.ReactElement => {
                     invalid={touched.ethnicity && !!errors.ethnicity}
                   >
                     <option>-Please select-</option>
-                    <option value="1">Hispanic</option>
-                    <option value="2">Black</option>
-                    <option value="3">Asian</option>
+                    {ETHNICITY_LIST.map(({ label, value }) => (
+                      <option value={value}>{label}</option>
+                    ))}
                   </Input>
                   <FormFeedback>{errors.ethnicity}</FormFeedback>
                 </FormGroup>

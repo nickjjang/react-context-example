@@ -7,7 +7,7 @@ import { PatientModel } from "../../../models";
 import List from "./List";
 import SearchForm, { SearchFormValues } from "./SearchForm";
 
-const SearchPatients = (): React.ReactElement => {
+const SearchTestRecords = (): React.ReactElement => {
   const history = useHistory();
   const [patients, setPatients] = useState<Array<PatientModel>>([]);
 
@@ -46,4 +46,4 @@ const SearchPatients = (): React.ReactElement => {
   );
 };
 
-export default SearchPatients;
+export default SearchTestRecords;

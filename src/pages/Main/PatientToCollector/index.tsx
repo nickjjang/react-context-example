@@ -24,15 +24,15 @@ import QRScannerModal from "../../../components/QRScannerModal";
 import data from "../../../data";
 import { PatientModel } from "../../../models";
 
-interface CollectorFormValues {
+interface PatientToCollectorFormValues {
   collectorCode: string;
 }
 
-const CollectorSchema = Yup.object().shape({
+const PatientToCollectorSchema = Yup.object().shape({
   collectorCode: Yup.string().required("Collector Code field is required."),
 });
 
-const Collector = (props: any): React.ReactElement => {
+const PatientToCollector = (props: any): React.ReactElement => {
   // States
   const [patient, setPatient] = useState<PatientModel | null>(null);
   const [isQRScannerOpen, setIsQRScannerOpen] = useState(false);
@@ -41,7 +41,7 @@ const Collector = (props: any): React.ReactElement => {
   const history = useHistory();
 
   // Handle collecting done
-  const handleDone = async (values: CollectorFormValues) => {
+  const handleDone = async (values: PatientToCollectorFormValues) => {
     console.log(values);
   };
 
@@ -59,12 +59,14 @@ const Collector = (props: any): React.ReactElement => {
   };
 
   // Collector Formik Initial Values
-  const initialValues: CollectorFormValues = { collectorCode: "" };
+  const initialValues: PatientToCollectorFormValues = {
+    collectorCode: "",
+  };
 
   // Formik
   const formik = useFormik({
     initialValues,
-    validationSchema: CollectorSchema,
+    validationSchema: PatientToCollectorSchema,
     onSubmit: handleDone,
   });
 
@@ -76,9 +78,9 @@ const Collector = (props: any): React.ReactElement => {
   return (
     <>
       <Helmet>
-        <title>Login</title>
-        <meta name="description" content="Login" />
-        <body className="page-login" />
+        <title>Patient to Collector - Aptitude</title>
+        <meta name="description" content="Patient to Collector" />
+        <body className="page-patient-to-collector" />
       </Helmet>
       <Card>
         <CardBody>
@@ -147,7 +149,7 @@ const Collector = (props: any): React.ReactElement => {
                     Cancel
                   </Button>
                   <Button type="submit" color="primary">
-                    Done
+                    Submit
                   </Button>
                 </FormGroup>
               </Form>
@@ -164,4 +166,4 @@ const Collector = (props: any): React.ReactElement => {
   );
 };
 
-export default Collector;
+export default PatientToCollector;

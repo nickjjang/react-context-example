@@ -1,12 +1,10 @@
 import React from "react";
 import QrReader from "react-qr-reader";
 import {
-  Button,
   FormGroup,
   Modal,
   ModalBody,
-  ModalFooter,
-  ModalHeader,
+  ModalHeader
 } from "reactstrap";
 import "./QRScannerModal.scss";
 

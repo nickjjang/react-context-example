@@ -19,7 +19,7 @@ import {
   UncontrolledDropdown,
 } from "reactstrap";
 import { AppContext } from "../App";
-import logo from "../assets/img/logo.png";
+import logo from "../assets/img/logo-black.png";
 import ActionTypes from "../reducers/ActionTypes";
 import "./MainLayout.scss";
 

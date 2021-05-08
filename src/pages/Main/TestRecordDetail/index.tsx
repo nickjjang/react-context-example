@@ -9,11 +9,14 @@ import {
   Col,
   CustomInput,
   Form,
+  FormFeedback,
   FormGroup,
+  Input,
   Label,
   Row,
 } from "reactstrap";
 import * as Yup from "yup";
+import { TEST_RESULT_LIST } from "../../../configs/constants";
 import { TEST_RESULT } from "../../../configs/enums";
 import data from "../../../data";
 import { TestModel } from "../../../models";
@@ -69,7 +72,7 @@ const TestRecordDetail = (props: any): React.ReactElement => {
 
   useEffect(() => {
     console.log(props);
-    setTestRecord(data.testRecords[0]);
+    setTestRecord(data.testRecords[3]);
   }, [props]);
 
   return (
@@ -129,6 +132,7 @@ const TestRecordDetail = (props: any): React.ReactElement => {
                   const {
                     errors,
                     touched,
+                    values,
                     handleSubmit,
                     handleChange,
                   } = formik;
@@ -137,13 +141,22 @@ const TestRecordDetail = (props: any): React.ReactElement => {
                       <Row>
                         <Col sm={12} md={4}>
                           <FormGroup>
-                            <Button
-                              type="button"
-                              color="primary"
-                              onClick={handleCancel}
+                            <Label for="testResult">Test Result</Label>
+                            <Input
+                              type="select"
+                              name="TestResult"
+                              id="testResult"
+                              value={values.TestResult}
+                              onChange={handleChange}
+                              invalid={
+                                touched.TestResult && !!errors.TestResult
+                              }
                             >
-                              Update
-                            </Button>
+                              {TEST_RESULT_LIST.map(({ label, value }) => (
+                                <option value={value}>{label}</option>
+                              ))}
+                            </Input>
+                            <FormFeedback>{errors.TestResult}</FormFeedback>
                           </FormGroup>
                         </Col>
                         <Col sm={12} md={4}>
@@ -153,7 +166,11 @@ const TestRecordDetail = (props: any): React.ReactElement => {
                               type="file"
                               id="testRecordPhotograph"
                               name="Photograph"
+                              invalid={
+                                touched.Photograph && !!errors.Photograph
+                              }
                             />
+                            <FormFeedback>{errors.Photograph}</FormFeedback>
                           </FormGroup>
                         </Col>
                         <Col xs={12}>

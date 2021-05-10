@@ -18,9 +18,9 @@ import {
   NavbarToggler,
   UncontrolledDropdown,
 } from "reactstrap";
-import { AppContext } from "../App";
+import AppContext from "../AppContext";
 import logo from "../assets/img/logo-black.png";
-import ActionTypes from "../reducers/ActionTypes";
+import { logout } from "../services/Auth";
 import "./MainLayout.scss";
 
 export interface MainLayoutProps {
@@ -31,10 +31,12 @@ const MainLayout = (props: MainLayoutProps): React.ReactElement => {
   const { children } = props;
   const [collapsed, setCollapsed] = useState(true);
   const toggleNavbar = () => setCollapsed(!collapsed);
-  const { dispatch } = useContext(AppContext);
+  const { state, dispatch } = useContext(AppContext);
+  const { auth } = state;
+  const user = auth ? auth.data : {};
   const history = useHistory();
   const handleLogout = async () => {
-    await dispatch({ type: ActionTypes.SET_AUTH, payload: null });
+    await logout(dispatch);
     history.push("/login");
   };
   return (
@@ -54,8 +56,12 @@ const MainLayout = (props: MainLayoutProps): React.ReactElement => {
                 <FontAwesomeIcon icon={faUser} />
               </DropdownToggle>
               <DropdownMenu right>
-                <div className="profile-username">Abbas Dhilawala</div>
-                <div className="profile-user-role">Site administrator</div>
+                <div className="profile-username">
+                  {user.firstName} {user.lastName}
+                </div>
+                <div className="profile-user-role">
+                  {user.roles && user.roles.length > 0 && user.roles[0].role}
+                </div>
                 <DropdownItem>
                   <FontAwesomeIcon icon={faIdBadge} /> Profile
                 </DropdownItem>

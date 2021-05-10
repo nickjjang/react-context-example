@@ -2,15 +2,15 @@ import classnames from "classnames";
 import moment from "moment";
 import React, { useState } from "react";
 import { Button, FormGroup, Table } from "reactstrap";
-import { PatientModel } from "../../../models";
+import { PageModel, UserModel } from "../../../models";
 
 export interface SearchFormValues {
   email: string;
 }
 
 export interface ListProps {
-  data: Array<PatientModel>;
-  onContinueWithSelected: (values: PatientModel) => void;
+  data: PageModel;
+  onContinueWithSelected: (values: UserModel) => void;
   onCreateNew: () => void;
 }
 
@@ -19,10 +19,11 @@ const List = ({
   onContinueWithSelected,
   onCreateNew,
 }: ListProps): React.ReactElement => {
-  const [selected, setSelected] = useState<PatientModel | null>(null);
+  const [selected, setSelected] = useState<UserModel | null>(null);
+  const list = data && data.content ? data.content : ([] as Array<UserModel>);
   return (
     <>
-      {data.length > 0 && (
+      {list.length > 0 && (
         <>
           <Table>
             <thead>
@@ -33,7 +34,7 @@ const List = ({
               </tr>
             </thead>
             <tbody>
-              {data.map((values: PatientModel, index: number) => (
+              {list.map((values: UserModel, index: number) => (
                 <tr
                   key={`${index}`}
                   onClick={() => {
@@ -50,13 +51,13 @@ const List = ({
                   <td>
                     {values.firstName} {values.lastName}
                   </td>
-                  <td>{values.email}</td>
+                  <td>{values.emailAddress}</td>
                   <td>{moment(values.dateOfBirth).format("D/M/YYYY")}</td>
                 </tr>
               ))}
             </tbody>
           </Table>
-          <FormGroup className="text-right">
+          <FormGroup className="text-right mb-1">
             <Button
               type="button"
               color="primary"
@@ -69,21 +70,21 @@ const List = ({
             >
               Continue With This Patient
             </Button>
-            <br />
-            OR
-            <br />
-            <Button
-              type="button"
-              color="primary"
-              onClick={() => {
-                onCreateNew();
-              }}
-            >
-              Create New One
-            </Button>
           </FormGroup>
+          <FormGroup className="text-right mb-1">OR</FormGroup>
         </>
       )}
+      <FormGroup className="text-right">
+        <Button
+          type="button"
+          color="primary"
+          onClick={() => {
+            onCreateNew();
+          }}
+        >
+          Create New One
+        </Button>
+      </FormGroup>
     </>
   );
 };

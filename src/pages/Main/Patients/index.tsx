@@ -1,24 +1,30 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Helmet } from "react-helmet";
 import { useHistory } from "react-router-dom";
 import { Card, CardBody } from "reactstrap";
-import data from "../../../data";
-import { PatientModel } from "../../../models";
+import AppContext from "../../../AppContext";
+import { PageModel, UserModel } from "../../../models";
+import * as User from "../../../services/User";
 import List from "./List";
 import SearchForm, { SearchFormValues } from "./SearchForm";
 
 const SearchPatients = (): React.ReactElement => {
   const history = useHistory();
-  const [patients, setPatients] = useState<Array<PatientModel>>([]);
+  const [page, setPage] = useState<PageModel>({} as PageModel);
+  const { dispatch } = useContext(AppContext);
 
-  const handleSearch = (values: SearchFormValues) => {
-    console.log(values);
-    setPatients(data.patients);
+  const handleSearch = async (values: SearchFormValues) => {
+    try {
+      const page = await User.findAll(dispatch, values);
+      setPage(page);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
-  const handleContinueWithSelected = (values: PatientModel) => {
+  const handleContinueWithSelected = (values: UserModel) => {
     console.log(values);
-    history.push(`patient-to-collector/${values.id}`);
+    history.push(`patient-to-collector/${values.emailAddress}`);
   };
 
   const handleCreateNew = () => {
@@ -36,7 +42,7 @@ const SearchPatients = (): React.ReactElement => {
         <CardBody>
           <SearchForm onSubmit={handleSearch} />
           <List
-            data={patients}
+            data={page}
             onContinueWithSelected={handleContinueWithSelected}
             onCreateNew={handleCreateNew}
           />

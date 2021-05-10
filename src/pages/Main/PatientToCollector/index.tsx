@@ -2,7 +2,7 @@ import { faQrcode } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useFormik } from "formik";
 import moment from "moment";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Helmet from "react-helmet";
 import { useHistory } from "react-router-dom";
 import {
@@ -20,9 +20,11 @@ import {
   Row,
 } from "reactstrap";
 import * as Yup from "yup";
+import AppContext from "../../../AppContext";
 import QRScannerModal from "../../../components/QRScannerModal";
-import data from "../../../data";
-import { PatientModel } from "../../../models";
+import { DeviceDataFormModel, UserModel } from "../../../models";
+import * as Data from "../../../services/Data";
+import * as User from "../../../services/User";
 
 interface PatientToCollectorFormValues {
   collectorCode: string;
@@ -32,17 +34,37 @@ const PatientToCollectorSchema = Yup.object().shape({
   collectorCode: Yup.string().required("Collector Code field is required."),
 });
 
-const PatientToCollector = (props: any): React.ReactElement => {
+const PatientToCollector = (props: {
+  match: {
+    params: { id: string };
+  };
+}): React.ReactElement => {
   // States
-  const [patient, setPatient] = useState<PatientModel | null>(null);
+  const [patient, setPatient] = useState<UserModel | null>(null);
   const [isQRScannerOpen, setIsQRScannerOpen] = useState(false);
+  const { state } = useContext(AppContext);
 
   // History for routing
   const history = useHistory();
 
   // Handle collecting done
   const handleDone = async (values: PatientToCollectorFormValues) => {
-    console.log(values);
+    try {
+      const params: DeviceDataFormModel = {
+        deviceDataModelId: "edfcab65-18d6-419d-abdc-86d413298b1a",
+        devicePropertySetId: "13867531-fcb9-4ccf-bc12-3a53f4385117",
+        ownerId: patient?.userId,
+        data: {
+          CollectorId: values.collectorCode,
+          SampleCollectedOn: moment().format("yyyy-MM-ddTHH:mm:ss.SSSZ"),
+          SampleCollectedBy: state.auth.data.userId,
+        },
+      };
+      await Data.deviceData(dispatch, params);
+      history.push("/");
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   // Handle cancel
@@ -70,10 +92,16 @@ const PatientToCollector = (props: any): React.ReactElement => {
     onSubmit: handleDone,
   });
 
+  const { dispatch } = useContext(AppContext);
+
   useEffect(() => {
-    console.log(props);
-    setPatient(data.patients[0]);
-  }, [props]);
+    (async () => {
+      console.log(props);
+      const { id } = props.match.params;
+      const patient = await User.findOne(dispatch, id);
+      await setPatient(patient);
+    })();
+  }, []);
 
   return (
     <>

@@ -1,24 +1,40 @@
-import { createBrowserHistory } from "history";
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Route, Router, Switch } from "react-router-dom";
 import { GuardedRoute, GuardProvider } from "react-router-guards";
-import { AppContext } from "./App";
+import { history } from "./App";
+import AppContext, { AppContextValues } from "./AppContext";
+import LoadingTent from "./components/LoadingTent";
 import * as Guards from "./Guards";
 import Login from "./pages/Login";
 import Main from "./pages/Main";
+import * as Auth from "./services/Auth";
 
-const history = createBrowserHistory();
 const AppRoutes = (): React.ReactElement => {
   const { state } = useContext(AppContext);
-  return (
-    <Router history={history}>
-      <Switch>
-        <Route exact path="/login" component={Login} />
-        <GuardProvider guards={[Guards.requireLogin]}>
-          <GuardedRoute path="/" component={Main} meta={state} />
-        </GuardProvider>
-      </Switch>
-    </Router>
+  const [remembered, setRemembered] = useState(false);
+  const { dispatch } = useContext(AppContext);
+  AppContextValues.dispatch = dispatch;
+  AppContextValues.state = state;
+  useEffect(() => {
+    Auth.remember(dispatch).then(() => {
+      setRemembered(true);
+    });
+  }, []);
+
+  return remembered ? (
+    <>
+      <Router history={history}>
+        <Switch>
+          <Route exact path="/login" component={Login} />
+          <GuardProvider guards={[Guards.requireLogin]}>
+            <GuardedRoute path="/" component={Main} meta={state} />
+          </GuardProvider>
+        </Switch>
+      </Router>
+      <LoadingTent />
+    </>
+  ) : (
+    <></>
   );
 };
 

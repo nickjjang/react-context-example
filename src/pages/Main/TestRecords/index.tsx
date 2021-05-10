@@ -3,7 +3,7 @@ import { Helmet } from "react-helmet";
 import { useHistory } from "react-router-dom";
 import { Card, CardBody } from "reactstrap";
 import data from "../../../data";
-import { PatientModel, TestModel } from "../../../models";
+import { UserModel, TestModel } from "../../../models";
 import List from "./List";
 import SearchForm, { SearchFormValues } from "./SearchForm";
 

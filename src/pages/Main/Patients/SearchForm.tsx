@@ -11,7 +11,7 @@ import {
 import * as Yup from "yup";
 
 export interface SearchFormValues {
-  email: string;
+  emailAddress: string;
 }
 
 export interface SearchFormProps {
@@ -19,13 +19,13 @@ export interface SearchFormProps {
 }
 
 const SearchSchema = Yup.object().shape({
-  email: Yup.string()
+  emailAddress: Yup.string()
     .email("Email address field is invalid.")
     .required("Email address field is required."),
 });
 
 const SearchForm = ({ onSubmit }: SearchFormProps): React.ReactElement => {
-  const initialValues: SearchFormValues = { email: "" };
+  const initialValues: SearchFormValues = { emailAddress: "" };
   return (
     <Formik
       initialValues={initialValues}
@@ -38,16 +38,16 @@ const SearchForm = ({ onSubmit }: SearchFormProps): React.ReactElement => {
             <strong>Enter the patient email address below</strong>
           </h4>
           <FormGroup>
-            <Label for="loginEmail">Email Address</Label>
+            <Label for="userEmail">Email Address</Label>
             <Input
               type="text"
-              name="email"
-              id="loginEmail"
-              value={values.email}
+              name="emailAddress"
+              id="userEmail"
+              value={values.emailAddress}
               onChange={handleChange}
-              invalid={touched.email && !!errors.email}
+              invalid={touched.emailAddress && !!errors.emailAddress}
             />
-            <FormFeedback>{errors.email}</FormFeedback>
+            <FormFeedback>{errors.emailAddress}</FormFeedback>
           </FormGroup>
           <FormGroup className="text-right">
             <Button color="primary" type="submit">

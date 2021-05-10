@@ -13,29 +13,37 @@ import {
   Label,
 } from "reactstrap";
 import * as Yup from "yup";
-import { AppContext } from "../../App";
+import ActionTypes from "../../actions/ActionTypes";
+import AppContext from "../../AppContext";
 import PortalLayout from "../../layouts/PortalLayout";
-import ActionTypes from "../../reducers/ActionTypes";
+import * as Auth from "../../services/Auth";
 
-interface LoginFormValues {
-  email: string;
+export interface LoginFormValues {
+  emailAddress: string;
   password: string;
 }
 
 const LoginSchema = Yup.object().shape({
-  email: Yup.string()
+  emailAddress: Yup.string()
     .email("Email address field is invalid.")
     .required("Email address field is required."),
   password: Yup.string().required("Password field is required."),
 });
 
 const Login = (): React.ReactElement => {
-  const initialValues: LoginFormValues = { email: "", password: "" };
+  const initialValues: LoginFormValues = { emailAddress: "", password: "" };
   const { dispatch } = useContext(AppContext);
   const history = useHistory();
+  console.log(process.env);
   const handleLogin = async (values: LoginFormValues) => {
-    await dispatch({ type: ActionTypes.SET_AUTH, payload: values });
-    history.push("/");
+    try {
+      const data = await Auth.login(dispatch, values);
+      console.log(data);
+      history.push("/");
+    } catch (error) {
+      alert(JSON.stringify(error));
+      // console.log(error);
+    }
   };
 
   return (
@@ -61,13 +69,13 @@ const Login = (): React.ReactElement => {
                   <Label for="loginEmail">Email Address</Label>
                   <Input
                     type="text"
-                    name="email"
+                    name="emailAddress"
                     id="loginEmail"
-                    value={values.email}
+                    value={values.emailAddress}
                     onChange={handleChange}
-                    invalid={touched.email && !!errors.email}
+                    invalid={touched.emailAddress && !!errors.emailAddress}
                   />
-                  <FormFeedback>{errors.email}</FormFeedback>
+                  <FormFeedback>{errors.emailAddress}</FormFeedback>
                 </FormGroup>
                 <FormGroup>
                   <Label for="loginPassword">Password</Label>

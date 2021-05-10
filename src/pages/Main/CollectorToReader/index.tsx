@@ -28,7 +28,7 @@ import ChangeNotifyInput from "../../../components/ChangeNotifyInput";
 import QRScannerModal from "../../../components/QRScannerModal";
 import { READER_STATUS } from "../../../configs/enums";
 import data from "../../../data";
-import { PatientModel, ReaderModel } from "../../../models";
+import { UserModel, ReaderModel } from "../../../models";
 
 interface CollectorToReaderFormValues {
   collectorCode: string;
@@ -42,7 +42,7 @@ const CollectorToReaderSchema = Yup.object().shape({
 
 const CollectorToReader = (): React.ReactElement => {
   // States
-  const [patient, setPatient] = useState<PatientModel | null>(null);
+  const [patient, setPatient] = useState<UserModel | null>(null);
   const [reader, setReader] = useState<ReaderModel | null>(null);
   const [isQRScannerOpen, setIsQRScannerOpen] = useState(false);
   const [collectorCode, setCollectorCode] = useState("");

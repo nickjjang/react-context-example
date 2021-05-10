@@ -1,0 +1,19 @@
+@import "../assets/scss/variables";
+
+.app-loading-tent {
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000000;
+  background-color: rgba(0, 0, 0, 0.01);
+
+  .loading-indicator {
+    position: absolute;
+    right: 20px;
+    bottom: 20px;
+    width: 60px;
+    height: 60px;
+  }
+}

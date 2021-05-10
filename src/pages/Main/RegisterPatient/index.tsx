@@ -1,5 +1,5 @@
 import { Formik } from "formik";
-import React from "react";
+import React, { useContext } from "react";
 import Helmet from "react-helmet";
 import { useHistory } from "react-router-dom";
 import {
@@ -13,12 +13,14 @@ import {
   Label,
 } from "reactstrap";
 import * as Yup from "yup";
+import AppContext from "../../../AppContext";
 import {
   ETHNICITY_LIST,
   GENDER_LIST,
   RACE_LIST,
 } from "../../../configs/constants";
-import { PatientModel } from "../../../models";
+import { UserModel } from "../../../models";
+import * as User from "../../../services/User";
 
 const RegisterPatientSchema = Yup.object().shape({
   firstName: Yup.string().required("First Name field is required."),
@@ -28,7 +30,7 @@ const RegisterPatientSchema = Yup.object().shape({
   gender: Yup.string(),
   race: Yup.string(),
   ethnicity: Yup.string(),
-  email: Yup.string()
+  emailAddress: Yup.string()
     .email("Email Address field is invalid.")
     .required("Email Address field is required."),
   phoneNumber: Yup.string().required("Phone Number field is required."),
@@ -38,17 +40,19 @@ const RegisterPatientSchema = Yup.object().shape({
   state: Yup.string(),
   zipCode: Yup.string(),
   password: Yup.string().required("Password field is required."),
-  confirmPassword: Yup.string().when("password", {
-    is: (val: string) => (val && val.length > 0 ? true : false),
-    then: Yup.string().oneOf(
-      [Yup.ref("password")],
-      "Confirm Password need to be the same as password"
-    ),
-  }),
+  confirmPassword: Yup.string()
+    .required("Confirm Password field is required.")
+    .when("password", {
+      is: (val: string) => (val && val.length > 0 ? true : false),
+      then: Yup.string().oneOf(
+        [Yup.ref("password")],
+        "Confirm Password need to be the same as password"
+      ),
+    }),
 });
 
 const RegisterPatient = (): React.ReactElement => {
-  const initialValues: PatientModel = {
+  const initialValues: UserModel = {
     firstName: "",
     middleName: "",
     lastName: "",
@@ -56,19 +60,51 @@ const RegisterPatient = (): React.ReactElement => {
     gender: "",
     race: "",
     ethnicity: "",
-    email: "",
+    emailAddress: "",
     phoneNumber: "",
     streetAddress1: "",
+    streetAddress2: "",
     city: "",
     state: "",
-    zipCode: "",
+    zipcode: "",
     password: "",
     confirmPassword: "",
   };
   const history = useHistory();
+  const { dispatch } = useContext(AppContext);
 
-  const handleRegister = (values: PatientModel) => {
+  const handleRegister = async (values: UserModel) => {
+    values.contactInfo = {
+      streetAddress1: values.streetAddress1 ? values.streetAddress1 : null,
+      streetAddress2: values.streetAddress2 ? values.streetAddress2 : null,
+      city: values.city ? values.city : null,
+      state: values.state ? values.state : null,
+      country: "United States",
+      zipcode: values.zipcode ? values.zipcode : null,
+      primaryPhone: values.phoneNumber ? values.phoneNumber : null,
+      secondaryPhone: null,
+      primaryPhoneVerified: false,
+    };
+    values.customData = [
+      {
+        field: {
+          fieldId: "0bd60ff9-cb92-4b75-8ae1-036cc4991d35",
+        },
+        fieldData: values.race,
+      },
+      {
+        field: {
+          fieldId: "75b54a97-9f94-42f7-a18d-4233c45332b0",
+        },
+        fieldData: values.ethnicity,
+      },
+    ];
     console.log(values);
+    try {
+      await User.update(dispatch, values);
+    } catch (error) {
+      console.log(JSON.stringify(error.message));
+    }
   };
 
   const handleCancel = () => {
@@ -197,13 +233,13 @@ const RegisterPatient = (): React.ReactElement => {
                   <Label for="registerEmail">Email Address</Label>
                   <Input
                     type="text"
-                    name="email"
+                    name="emailAddress"
                     id="registerEmail"
-                    value={values.email}
+                    value={values.emailAddress}
                     onChange={handleChange}
-                    invalid={touched.email && !!errors.email}
+                    invalid={touched.emailAddress && !!errors.emailAddress}
                   />
-                  <FormFeedback>{errors.email}</FormFeedback>
+                  <FormFeedback>{errors.emailAddress}</FormFeedback>
                 </FormGroup>
                 <FormGroup>
                   <Label for="registerPhoneNumber">phoneNumber</Label>
@@ -271,11 +307,11 @@ const RegisterPatient = (): React.ReactElement => {
                     type="text"
                     name="zipCode"
                     id="registerZipCode"
-                    value={values.zipCode}
+                    value={values.zipcode}
                     onChange={handleChange}
-                    invalid={touched.zipCode && !!errors.zipCode}
+                    invalid={touched.zipcode && !!errors.zipcode}
                   />
-                  <FormFeedback>{errors.zipCode}</FormFeedback>
+                  <FormFeedback>{errors.zipcode}</FormFeedback>
                 </FormGroup>
                 <FormGroup>
                   <Label for="registerPassword">Password</Label>

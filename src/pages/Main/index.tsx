@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { Route, Switch } from "react-router-dom";
 import { GuardedRoute, GuardProvider } from "react-router-guards";
-import { AppContext } from "../../App";
+import AppContext from "../../AppContext";
 import * as Guards from "../../Guards";
 import MainLayout from "../../layouts/MainLayout";
 import Page404 from "../Errors/Page404";

@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import { Input, InputProps } from "reactstrap";
 
-export interface QRInputProps extends InputProps {
+export interface ChangeNotifyInputProps extends InputProps {
   onInputChanged: () => void;
 }
 
-const ChangeNotifyInput = (props: QRInputProps): React.ReactElement => {
+const ChangeNotifyInput = (
+  props: ChangeNotifyInputProps
+): React.ReactElement => {
   const [typingTimeout, setTypingTimeout] = useState<NodeJS.Timeout | null>(
     null
   );

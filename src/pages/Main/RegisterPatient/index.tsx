@@ -99,6 +99,7 @@ const RegisterPatient = (): React.ReactElement => {
         fieldData: values.ethnicity,
       },
     ];
+    // values.userId = "abcdef";
     console.log(values);
     try {
       await User.update(dispatch, values);

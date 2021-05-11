@@ -5,6 +5,7 @@ import moment from "moment";
 import React, { useContext, useEffect, useState } from "react";
 import Helmet from "react-helmet";
 import { useHistory } from "react-router-dom";
+import { toast } from "react-toastify";
 import {
   Button,
   Card,
@@ -61,6 +62,7 @@ const PatientToCollector = (props: {
         },
       };
       await Data.deviceData(dispatch, params);
+      toast.success("The patient associated with collector successfully.");
       history.push("/");
     } catch (error) {
       console.log(error);
@@ -113,13 +115,8 @@ const PatientToCollector = (props: {
       <Card>
         <CardBody>
           {(() => {
-            const {
-              errors,
-              touched,
-              values,
-              handleSubmit,
-              handleChange,
-            } = formik;
+            const { errors, touched, values, handleSubmit, handleChange } =
+              formik;
             return (
               <Form onSubmit={handleSubmit}>
                 <h4 className="text-center">

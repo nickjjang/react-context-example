@@ -4,6 +4,7 @@ import React, { useReducer } from "react";
 import AppContext from "./AppContext";
 import AppRoutes from "./AppRoutes";
 import "./assets/scss/main.scss";
+
 import AppReducer, { initialState } from "./reducers/AppReducer";
 
 export const history = createBrowserHistory();

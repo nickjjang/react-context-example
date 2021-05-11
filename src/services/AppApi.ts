@@ -1,6 +1,7 @@
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import Qs from "qs";
 import { AppContextValues } from "../AppContext";
+import { toast } from "react-toastify";
 
 const AppApi = axios.create({
   baseURL: process.env.REACT_APP_API_ENDPOINT,
@@ -27,5 +28,20 @@ AppApi.interceptors.request.use((config) => {
   }
   return config;
 });
+
+AppApi.interceptors.response.use(
+  (response: AxiosResponse<any>): AxiosResponse<any> => {
+    console.log(response);
+    return response;
+  },
+  (error) => {
+    console.log(JSON.stringify(error));
+    switch (error.response.status) {
+      case 412:
+        toast.error(error.response.data);
+        break;
+    }
+  }
+);
 
 export default AppApi;

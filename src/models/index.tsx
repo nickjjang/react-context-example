@@ -114,5 +114,10 @@ export interface DeviceDataFormModel {
     CollectorId?: string;
     SampleCollectedOn?: string;
     SampleCollectedBy?: string;
+
+    ReaderId?: string;
+    TestStartDate?: string;
+    TestRunBy?: string;
+    TestComplete?: boolean;
   };
 }

@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Route, Router, Switch } from "react-router-dom";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { GuardedRoute, GuardProvider } from "react-router-guards";
-import { history } from "./App";
+import { ToastContainer } from "react-toastify";
 import AppContext, { AppContextValues } from "./AppContext";
 import LoadingTent from "./components/LoadingTent";
 import * as Guards from "./Guards";
@@ -23,15 +23,16 @@ const AppRoutes = (): React.ReactElement => {
 
   return remembered ? (
     <>
-      <Router history={history}>
+      <BrowserRouter>
         <Switch>
           <Route exact path="/login" component={Login} />
           <GuardProvider guards={[Guards.requireLogin]}>
             <GuardedRoute path="/" component={Main} meta={state} />
           </GuardProvider>
         </Switch>
-      </Router>
+      </BrowserRouter>
       <LoadingTent />
+      <ToastContainer hideProgressBar autoClose={3000} />
     </>
   ) : (
     <></>

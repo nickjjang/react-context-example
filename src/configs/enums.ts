@@ -4,10 +4,10 @@ export enum READER_STATUS {
 }
 
 export enum GENDER {
-  MALE = "Male",
-  FEMALE = "Female",
-  OTHER = "Other",
-  DI = "Decline to identity",
+  MALE = "MALE",
+  FEMALE = "FEMALE",
+  OTHER = "OTHER",
+  DI = "DECLINE TO IDENTITY",
 }
 
 export enum RACE {

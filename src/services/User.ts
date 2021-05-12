@@ -42,12 +42,13 @@ export const findOne = async (
   }
 };
 
-export const update = async (
+export const store = async (
   dispatch: React.Dispatch<ActionValues>,
   data: UserModel
 ): Promise<null> => {
   await dispatch(setLoading(true));
   try {
+    console.log(JSON.stringify(data));
     await AppApi.post("/user/user", data, {
       headers: {
         "Content-Type": "application/json",
@@ -57,7 +58,6 @@ export const update = async (
     return null;
   } catch (error) {
     await dispatch(setLoading(false));
-    console.log(error);
     throw error;
   }
 };

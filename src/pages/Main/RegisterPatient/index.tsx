@@ -2,6 +2,7 @@ import { Formik } from "formik";
 import React, { useContext } from "react";
 import Helmet from "react-helmet";
 import { useHistory } from "react-router-dom";
+import { toast } from "react-toastify";
 import {
   Button,
   Card,
@@ -19,6 +20,7 @@ import {
   GENDER_LIST,
   RACE_LIST,
 } from "../../../configs/constants";
+import ENV from "../../../configs/env";
 import { UserModel } from "../../../models";
 import * as User from "../../../services/User";
 
@@ -74,35 +76,77 @@ const RegisterPatient = (): React.ReactElement => {
   const { dispatch } = useContext(AppContext);
 
   const handleRegister = async (values: UserModel) => {
-    values.contactInfo = {
-      streetAddress1: values.streetAddress1 ? values.streetAddress1 : null,
-      streetAddress2: values.streetAddress2 ? values.streetAddress2 : null,
-      city: values.city ? values.city : null,
-      state: values.state ? values.state : null,
-      country: "United States",
-      zipcode: values.zipcode ? values.zipcode : null,
-      primaryPhone: values.phoneNumber ? values.phoneNumber : null,
-      secondaryPhone: null,
-      primaryPhoneVerified: false,
-    };
-    values.customData = [
-      {
-        field: {
-          fieldId: "0bd60ff9-cb92-4b75-8ae1-036cc4991d35",
-        },
-        fieldData: values.race,
-      },
-      {
-        field: {
-          fieldId: "75b54a97-9f94-42f7-a18d-4233c45332b0",
-        },
-        fieldData: values.ethnicity,
-      },
-    ];
+    const {
+      firstName,
+      middleName,
+      lastName,
+      emailAddress,
+      streetAddress1,
+      streetAddress2,
+      city,
+      state,
+      zipcode,
+      phoneNumber,
+      gender,
+      dateOfBirth,
+      password,
+    } = values;
+
     // values.userId = "abcdef";
-    console.log(values);
+    const data = {
+      user: {
+        firstName,
+        middleName,
+        lastName,
+        emailAddress,
+        contactInfo: {
+          streetAddress1,
+          streetAddress2,
+          city,
+          state,
+          country: null,
+          zipcode,
+          primaryPhone: phoneNumber,
+          secondaryPhone: null,
+          primaryPhoneVerified: false,
+        },
+        gender,
+        dateOfBirth,
+        roles: [
+          {
+            role: ENV.PATIENT_ROLE,
+            practice: {
+              practiceId: ENV.PRACTICE_ID,
+            },
+            defaultRole: true,
+          },
+        ],
+        tenant: {
+          tenantId: ENV.TENANT_ID,
+        },
+      },
+      password,
+      customData: [
+        {
+          field: {
+            fieldId: ENV.RACE_FIELD_ID,
+            area: ENV.CUSTOM_FIELD_AREA_USER_PROFILE,
+          },
+          fieldData: values.race,
+        },
+        {
+          field: {
+            fieldId: ENV.ETHNICITY_FIELD_ID,
+            area: ENV.CUSTOM_FIELD_AREA_USER_PROFILE,
+          },
+          fieldData: values.ethnicity,
+        },
+      ],
+    };
     try {
-      await User.update(dispatch, values);
+      await User.store(dispatch, data);
+      toast.success("Patient registered successfully.");
+      history.push(`/patient-to-collector/${values.emailAddress}`);
     } catch (error) {
       console.log(JSON.stringify(error.message));
     }

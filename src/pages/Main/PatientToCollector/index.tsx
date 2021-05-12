@@ -154,7 +154,7 @@ const PatientToCollector = (props: {
                       <Col sm={12} md={4}>
                         <Label>Email Address</Label>
                         <p>
-                          {patient.firstName} {patient.lastName}
+                          {patient.emailAddress}
                         </p>
                       </Col>
                       <Col sm={12} md={4}>

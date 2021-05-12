@@ -1,0 +1,11 @@
+1. The Gender value should be all caps (i.e MALE instead of Male).
+
+2. The dob should be in format of yyyy-MM-dd
+
+3. The tenantId is also required. Please make tenantId a configuration, not hardcoded.
+
+4. Also the practice id (under roles) and user info (such as first name, last name, email, dob etc.) were just examples. You will need to substitute the user info from the actual form and the practice id should be the practice id of the current user (available in the user object retrieved during login)
+
+5. For customData fields, the fieldData values come from the form (dropdown) and the fieldIds should be configuration entry. The area is a constant value for this case
+
+And as in the API doc, the userId can be randomly generated following uuid format

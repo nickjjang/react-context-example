@@ -1,14 +1,15 @@
 import axios, { AxiosResponse } from "axios";
 import Qs from "qs";
-import { AppContextValues } from "../AppContext";
 import { toast } from "react-toastify";
+import { AppContextValues } from "../AppContext";
+import ENV from "../configs/env";
 
 const AppApi = axios.create({
-  baseURL: process.env.REACT_APP_API_ENDPOINT,
+  baseURL: ENV.API_ENDPOINT,
   headers: {
-    "X-TENANT-DOMAIN": process.env.REACT_APP_API_HEADER_X_TENANT_DOMAIN,
-    "X-API-VERSION": process.env.REACT_APP_API_HEADER_X_API_VERSION,
-    "X-APP-TYPE": process.env.REACT_APP_API_HEADER_X_APP_TYPE,
+    "X-TENANT-DOMAIN": ENV.API_HEADER_X_TENANT_DOMAIN,
+    "X-API-VERSION": ENV.API_HEADER_X_API_VERSION,
+    "X-APP-TYPE": ENV.API_HEADER_X_APP_TYPE,
     "Content-Type": "application/x-www-form-urlencoded",
   },
   paramsSerializer: (params) => {
@@ -35,12 +36,13 @@ AppApi.interceptors.response.use(
     return response;
   },
   (error) => {
-    console.log(JSON.stringify(error));
     switch (error.response.status) {
       case 412:
+      case 400:
         toast.error(error.response.data);
         break;
     }
+    throw error;
   }
 );
 

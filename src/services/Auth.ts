@@ -9,17 +9,21 @@ export const login = async (
   params: any
 ): Promise<any> => {
   await dispatch(setLoading(true));
-  const response = await AppApi.post("/auth/login", params);
-  console.log(response);
-  const auth = {
-    token: response.headers["authorization"],
-    data: response.data,
-  };
-  store.set("auth", auth);
-  await dispatch(setAuth(auth));
-  await dispatch(setLoading(false));
-  await dispatch(setLoading(false));
-  return response.data;
+  try {
+    const response = await AppApi.post("/auth/login", params);
+    console.log(response);
+    const auth = {
+      token: response.headers["authorization"],
+      data: response.data,
+    };
+    store.set("auth", auth);
+    await dispatch(setAuth(auth));
+    await dispatch(setLoading(false));
+    return response.data;
+  } catch (error) {
+    await dispatch(setLoading(false));
+    throw error;
+  }
 };
 
 export const remember = async (

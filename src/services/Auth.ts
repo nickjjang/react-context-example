@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import React from "react";
 import store from "store2";
 import { ActionValues } from "../actions/ActionTypes";

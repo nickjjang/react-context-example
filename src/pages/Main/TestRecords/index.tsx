@@ -3,7 +3,7 @@ import { Helmet } from "react-helmet";
 import { useHistory } from "react-router-dom";
 import { Card, CardBody } from "reactstrap";
 import data from "../../../data";
-import { UserModel, TestModel } from "../../../models";
+import { TestModel } from "../../../models";
 import List from "./List";
 import SearchForm, { SearchFormValues } from "./SearchForm";
 
@@ -16,6 +16,7 @@ const SearchTestRecords = (): React.ReactElement => {
     setTestRecords(data.testRecords);
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleViewDetail = (values: TestModel) => {
     console.log(values);
     history.push(`patient-to-collector/${values.CollectorId}`);

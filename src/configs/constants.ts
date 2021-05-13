@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import * as ENUMS from "./enums";
 
 export const READER_STATUS_LIST = [

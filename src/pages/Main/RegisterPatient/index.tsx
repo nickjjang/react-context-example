@@ -29,9 +29,9 @@ const RegisterPatientSchema = Yup.object().shape({
   middleName: Yup.string(),
   lastName: Yup.string().required("Last Name field is required."),
   dateOfBirth: Yup.string().required("Date of Birth field is required."),
-  gender: Yup.string(),
-  race: Yup.string(),
-  ethnicity: Yup.string(),
+  gender: Yup.string().required("Gender is required."),
+  race: Yup.string().required("Race is required."),
+  ethnicity: Yup.string().required("Ethnicity is required."),
   emailAddress: Yup.string()
     .email("Email Address field is invalid.")
     .required("Email Address field is required."),
@@ -40,8 +40,14 @@ const RegisterPatientSchema = Yup.object().shape({
   streetAddress2: Yup.string(),
   city: Yup.string(),
   state: Yup.string(),
-  zipCode: Yup.string(),
-  password: Yup.string().required("Password field is required."),
+  zipcode: Yup.string(),
+  password: Yup.string()
+    .required("Password field is required.")
+    .matches(
+      /(?=.*[A-Z])/g,
+      "Password must contains at least one uppercase letter."
+    )
+    .matches(/(?=.{8,})/g, "Password must have at least 8 letters."),
   confirmPassword: Yup.string()
     .required("Confirm Password field is required.")
     .when("password", {
@@ -347,11 +353,11 @@ const RegisterPatient = (): React.ReactElement => {
                   <FormFeedback>{errors.state}</FormFeedback>
                 </FormGroup>
                 <FormGroup>
-                  <Label for="registerZipCode">Zip Code</Label>
+                  <Label for="registerZipcode">Zip Code</Label>
                   <Input
                     type="text"
-                    name="zipCode"
-                    id="registerZipCode"
+                    name="zipcode"
+                    id="registerZipcode"
                     value={values.zipcode}
                     onChange={handleChange}
                     invalid={touched.zipcode && !!errors.zipcode}

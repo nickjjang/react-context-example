@@ -13,7 +13,6 @@ import {
   Label,
 } from "reactstrap";
 import * as Yup from "yup";
-import ActionTypes from "../../actions/ActionTypes";
 import AppContext from "../../AppContext";
 import PortalLayout from "../../layouts/PortalLayout";
 import * as Auth from "../../services/Auth";
@@ -34,14 +33,11 @@ const Login = (): React.ReactElement => {
   const initialValues: LoginFormValues = { emailAddress: "", password: "" };
   const { dispatch } = useContext(AppContext);
   const history = useHistory();
-  console.log(process.env);
   const handleLogin = async (values: LoginFormValues) => {
     try {
-      const data = await Auth.login(dispatch, values);
-      console.log(data);
+      await Auth.login(dispatch, values);
       history.push("/");
     } catch (error) {
-      alert(JSON.stringify(error));
       // console.log(error);
     }
   };

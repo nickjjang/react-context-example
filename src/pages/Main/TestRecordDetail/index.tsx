@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useFormik } from "formik";
 import React, { useEffect, useState } from "react";
 import Helmet from "react-helmet";

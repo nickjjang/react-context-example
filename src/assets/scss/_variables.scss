@@ -8,9 +8,10 @@ $font-family-base: "Open Sans", sans-serif;
 $font-family-heading: Lato, sans-serif;
 $card-border-color: $dark;
 
+$enable-shadows: true;
 
 // Toastify Variables
-$rt-namespace: 'Toastify';
+$rt-namespace: "Toastify";
 $rt-toast-background: #fff !default;
 $rt-toast-min-height: 64px !default;
 $rt-toast-max-height: 800px !default;
@@ -25,13 +26,19 @@ $rt-color-error: #e74c3c !default;
 $rt-text-color-default: #aaa !default;
 $rt-text-color-dark: #fff !default;
 
-$rt-color-progress-default: linear-gradient(to right, #078d0c, #5ac8fa, #007aff, #34aadc, #5856d6, #ff2d55) !default;
+$rt-color-progress-default: linear-gradient(
+  to right,
+  #078d0c,
+  #5ac8fa,
+  #007aff,
+  #34aadc,
+  #5856d6,
+  #ff2d55
+) !default;
 $rt-color-progress-dark: #bb86fc !default;
 $rt-mobile: "only screen and (max-width : 480px)" !default;
 $rt-font-family: sans-serif !default;
 $rt-z-index: 9999 !default;
-
-
 
 @import "~bootstrap/scss/variables";
 

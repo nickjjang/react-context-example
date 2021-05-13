@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import ActionTypes, { ActionValues, AppState } from "./ActionTypes";
 
 export const setAuth = (

@@ -1,8 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import axios, { AxiosResponse } from "axios";
 import Qs from "qs";
 import { toast } from "react-toastify";
-import { AppContextValues } from "../AppContext";
+import { AppContextValues, history } from "../AppContext";
 import ENV from "../configs/env";
+import AppExceptionMessage from "./AppExceptionMessage";
 
 const AppApi = axios.create({
   baseURL: ENV.API_ENDPOINT,
@@ -37,13 +39,21 @@ AppApi.interceptors.response.use(
     return response;
   },
   (error) => {
-    switch (error.response.status) {
+    const { response } = error;
+    switch (response.status) {
+      case 401: {
+        toast.error("Unauthorized");
+        history.push("/login");
+        break;
+      }
       case 412:
       case 400:
       case 404:
-      default:
-        toast.error(error.response.data);
+      default: {
+        const errorMessage = new AppExceptionMessage(error.response);
+        toast.error(errorMessage.message);
         break;
+      }
     }
     throw error;
   }

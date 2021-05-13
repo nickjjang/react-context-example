@@ -59,8 +59,15 @@ export interface UserModel {
 }
 
 export interface ReaderModel {
-  id?: string;
-  status?: string;
+  ReaderId?: {
+    value?: string;
+  };
+  Status?: {
+    value?: string;
+  };
+  HeartbeatReceivedOn?: {
+    value?: string;
+  };
 }
 
 export interface TestModel {
@@ -120,4 +127,34 @@ export interface DeviceDataFormModel {
     TestRunBy?: string;
     TestComplete?: boolean;
   };
+}
+
+export interface CollectorModel {
+  CollectorId?: {
+    link?: string;
+    reference?: string;
+    value?: string;
+    valueProvidedOn?: string;
+  };
+}
+
+export interface DeviceDataAdvancedOwnerFormModel {
+  deviceDataModelId?: string;
+  devicePropertyCodes?: Array<string>;
+  deviceCriteria: Array<{
+    key: string;
+    operator: string;
+    value: string;
+  }>;
+}
+
+export interface DeviceDataModel {
+  deviceDataId?: string;
+  deviceDataModelId?: string;
+  maxValueProvidedOn?: string;
+  minValueProvidedOn?: string;
+  owner?: UserModel;
+  ownerId?: string;
+  ownerName?: string;
+  data?: CollectorModel | ReaderModel;
 }

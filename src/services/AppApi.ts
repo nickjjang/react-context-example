@@ -27,6 +27,7 @@ AppApi.interceptors.request.use((config) => {
       config.data = Qs.stringify(config.data);
     }
   }
+  console.log(JSON.stringify(config.data));
   return config;
 });
 
@@ -39,6 +40,8 @@ AppApi.interceptors.response.use(
     switch (error.response.status) {
       case 412:
       case 400:
+      case 404:
+      default:
         toast.error(error.response.data);
         break;
     }

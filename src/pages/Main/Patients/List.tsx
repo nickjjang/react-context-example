@@ -25,7 +25,7 @@ const List = ({
     <>
       {list.length > 0 && (
         <>
-          <Table>
+          <Table responsive hover>
             <thead>
               <tr>
                 <th>Patient Name</th>

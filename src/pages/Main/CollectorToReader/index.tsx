@@ -7,9 +7,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import classNames from "classnames";
 import { useFormik } from "formik";
 import moment from "moment";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import Helmet from "react-helmet";
 import { useHistory } from "react-router-dom";
+import { toast } from "react-toastify";
 import {
   Button,
   Card,
@@ -24,11 +25,13 @@ import {
   Row,
 } from "reactstrap";
 import * as Yup from "yup";
+import AppContext from "../../../AppContext";
 import ChangeNotifyInput from "../../../components/ChangeNotifyInput";
 import QRScannerModal from "../../../components/QRScannerModal";
 import { READER_STATUS } from "../../../configs/enums";
-import data from "../../../data";
-import { UserModel, ReaderModel } from "../../../models";
+import ENV from "../../../configs/env";
+import { DeviceDataModel, ReaderModel } from "../../../models";
+import * as Data from "../../../services/Data";
 
 interface CollectorToReaderFormValues {
   collectorCode: string;
@@ -42,19 +45,36 @@ const CollectorToReaderSchema = Yup.object().shape({
 
 const CollectorToReader = (): React.ReactElement => {
   // States
-  const [patient, setPatient] = useState<UserModel | null>(null);
-  const [reader, setReader] = useState<ReaderModel | null>(null);
+  const [collector, setCollector] = useState<DeviceDataModel | null>(null);
+  const [reader, setReader] = useState<DeviceDataModel | null>(null);
   const [isQRScannerOpen, setIsQRScannerOpen] = useState(false);
-  const [collectorCode, setCollectorCode] = useState("");
-  const [readerCode, setReaderCode] = useState("");
   const [selected, setSelected] = useState("collectorCode");
+  const { dispatch } = useContext(AppContext);
+  const { state } = useContext(AppContext);
 
   // History for routing
   const history = useHistory();
 
   // Handle collecting done
-  const handleDone = async (values: CollectorToReaderFormValues) => {
-    console.log(values);
+  const handleStartTest = async (values: CollectorToReaderFormValues) => {
+    try {
+      const params = {
+        deviceDataModelId: ENV.COLLECTOR_DEVICE_DATA_MODEL_ID,
+        devicePropertySetId: ENV.DEVICE_PROPERTY_SET_ID,
+        data: {
+          CollectorId: values.collectorCode,
+          ReaderId: values.readerCode,
+          TestStartDate: moment().format("YYYY-MM-DDTHH:mm:ss.sssZ"),
+          TestRunBy: state.auth.data.userId,
+          TestComplete: false,
+        },
+      };
+      await Data.deviceData(dispatch, params);
+      toast.success("The reader associated with collector successfully.");
+      history.push("/");
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   // Handle cancel
@@ -73,25 +93,46 @@ const CollectorToReader = (): React.ReactElement => {
     setIsQRScannerOpen(!isQRScannerOpen);
   };
 
-  const handleCollectorSearch = () => {
-    setPatient(data.patients[0]);
+  const handleCollectorSearch = async (value: string) => {
+    const params = {
+      deviceDataModelId: ENV.COLLECTOR_DEVICE_DATA_MODEL_ID,
+      devicePropertyCodes: ["CollectorId"],
+      deviceCriteria: [
+        {
+          key: "CollectorId",
+          operator: "Equal",
+          value,
+        },
+      ],
+    };
+    const collector = await Data.deviceDataAdvancedOwner(dispatch, params);
+    setCollector(collector);
   };
 
-  const handleReaderSearch = () => {
-    setReader({
-      id: "1",
-      status: "Online",
-    });
+  const handleReaderSearch = async (value: string) => {
+    const params = {
+      deviceDataModelId: ENV.READER_DEVICE_DATA_MODEL_ID,
+      devicePropertyCodes: ["ReaderId", "Status", "HeartbeatReceivedOn"],
+      deviceCriteria: [
+        {
+          key: "ReaderId",
+          operator: "Equal",
+          value,
+        },
+      ],
+    };
+    const reader = await Data.deviceDataAdvancedOwner(dispatch, params);
+    setReader(reader);
   };
 
   const handleQRScanned = async (qr: string | null) => {
-    await formik.setFieldValue(selected, qr);
+    formik.setFieldValue(selected, qr);
     switch (selected) {
       case "collectorCode":
-        handleCollectorSearch();
+        handleCollectorSearch(qr as string);
         break;
       case "readerCode":
-        handleReaderSearch();
+        handleReaderSearch(qr as string);
         break;
       default:
         break;
@@ -108,17 +149,10 @@ const CollectorToReader = (): React.ReactElement => {
   const formik = useFormik({
     initialValues,
     validationSchema: CollectorToReaderSchema,
-    onSubmit: handleDone,
+    onSubmit: handleStartTest,
   });
 
-  useEffect(() => {
-    if (collectorCode) {
-      setPatient(data.patients[0]);
-    }
-    if (readerCode) {
-      setReader({ id: "1", status: "online" });
-    }
-  }, [collectorCode, readerCode]);
+  const readerData = reader?.data as ReaderModel;
 
   return (
     <>
@@ -130,13 +164,8 @@ const CollectorToReader = (): React.ReactElement => {
       <Card>
         <CardBody>
           {(() => {
-            const {
-              errors,
-              touched,
-              values,
-              handleSubmit,
-              handleChange,
-            } = formik;
+            const { errors, touched, values, handleSubmit, handleChange } =
+              formik;
             return (
               <Form onSubmit={handleSubmit}>
                 <h4 className="text-center">
@@ -150,7 +179,9 @@ const CollectorToReader = (): React.ReactElement => {
                       id="collectorCode"
                       value={values.collectorCode}
                       onChange={handleChange}
-                      onInputChanged={handleCollectorSearch}
+                      onInputChanged={(event) => {
+                        handleCollectorSearch(event.target.value);
+                      }}
                       invalid={touched.collectorCode && !!errors.collectorCode}
                     />
                     <InputGroupAddon addonType="append">
@@ -179,7 +210,9 @@ const CollectorToReader = (): React.ReactElement => {
                       id="readerCode"
                       value={values.readerCode}
                       onChange={handleChange}
-                      onInputChanged={handleReaderSearch}
+                      onInputChanged={(event) => {
+                        handleReaderSearch(event.target.value);
+                      }}
                       invalid={touched.readerCode && !!errors.readerCode}
                     />
                     <InputGroupAddon addonType="append">
@@ -199,24 +232,24 @@ const CollectorToReader = (): React.ReactElement => {
                     {errors.readerCode}
                   </FormFeedback>
                 </FormGroup>
-                {patient && (
+                {collector && (
                   <FormGroup>
                     <Row>
                       <Col sm={12} md={4}>
                         <Label>Patient Name</Label>
-                        <p>
-                          {patient.firstName} {patient.lastName}
-                        </p>
+                        <p>{collector.ownerName}</p>
                       </Col>
                       <Col sm={12} md={4}>
                         <Label>Email Address</Label>
-                        <p>
-                          {patient.firstName} {patient.lastName}
-                        </p>
+                        <p>{collector.owner?.emailAddress}</p>
                       </Col>
                       <Col sm={12} md={4}>
                         <Label>Date of Birth</Label>
-                        <p>{moment(patient.dateOfBirth).format("M/D/YYYY")}</p>
+                        <p>
+                          {moment(collector.owner?.dateOfBirth).format(
+                            "M/D/YYYY"
+                          )}
+                        </p>
                       </Col>
                     </Row>
                   </FormGroup>
@@ -225,12 +258,15 @@ const CollectorToReader = (): React.ReactElement => {
                   <FormGroup>
                     <Label>Reader Status</Label>
                     <p>
-                      {reader.status === READER_STATUS.ONLINE ? (
+                      {readerData &&
+                      readerData.Status?.value === READER_STATUS.ONLINE ? (
                         <FontAwesomeIcon icon={faCircleNotch} color="green" />
                       ) : (
                         <FontAwesomeIcon icon={faTimes} color="red" />
                       )}
-                      <span className="ml-2">{reader.status}</span>
+                      <span className="ml-2">
+                        {readerData && readerData.Status?.value}
+                      </span>
                     </p>
                   </FormGroup>
                 )}
@@ -246,7 +282,7 @@ const CollectorToReader = (): React.ReactElement => {
                   <Button
                     type="submit"
                     color="primary"
-                    disabled={!patient || !reader}
+                    // disabled={!collector || !reader}
                   >
                     Start Test
                   </Button>

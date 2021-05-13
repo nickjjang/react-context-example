@@ -23,6 +23,7 @@ import {
 import * as Yup from "yup";
 import AppContext from "../../../AppContext";
 import QRScannerModal from "../../../components/QRScannerModal";
+import ENV from "../../../configs/env";
 import { DeviceDataFormModel, UserModel } from "../../../models";
 import * as Data from "../../../services/Data";
 import * as User from "../../../services/User";
@@ -52,12 +53,12 @@ const PatientToCollector = (props: {
   const handleDone = async (values: PatientToCollectorFormValues) => {
     try {
       const params: DeviceDataFormModel = {
-        deviceDataModelId: "edfcab65-18d6-419d-abdc-86d413298b1a",
-        devicePropertySetId: "13867531-fcb9-4ccf-bc12-3a53f4385117",
+        deviceDataModelId: ENV.COLLECTOR_DEVICE_DATA_MODEL_ID,
+        devicePropertySetId: ENV.DEVICE_PROPERTY_SET_ID,
         ownerId: patient?.userId,
         data: {
           CollectorId: values.collectorCode,
-          SampleCollectedOn: moment().format("yyyy-MM-ddTHH:mm:ss.SSSZ"),
+          SampleCollectedOn: moment().format("YYYY-MM-DDTHH:mm:ss.sssZ"),
           SampleCollectedBy: state.auth.data.userId,
         },
       };
@@ -153,9 +154,7 @@ const PatientToCollector = (props: {
                       </Col>
                       <Col sm={12} md={4}>
                         <Label>Email Address</Label>
-                        <p>
-                          {patient.emailAddress}
-                        </p>
+                        <p>{patient.emailAddress}</p>
                       </Col>
                       <Col sm={12} md={4}>
                         <Label>Date of Birth</Label>

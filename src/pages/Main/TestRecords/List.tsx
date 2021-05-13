@@ -15,7 +15,7 @@ const List = ({ data }: ListProps): React.ReactElement => {
     <>
       {data.length > 0 && (
         <>
-          <Table>
+          <Table responsive hover>
             <thead>
               <tr>
                 <th>Test Completed On</th>

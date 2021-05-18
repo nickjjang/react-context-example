@@ -58,16 +58,17 @@ export interface UserModel {
   customData?: Array<UserMetaData>;
 }
 
+export interface ReaderItemModel {
+  value?: string;
+  valueProvidedOn?: string;
+  reference?: string;
+  link?: string;
+}
+
 export interface ReaderModel {
-  ReaderId?: {
-    value?: string;
-  };
-  Status?: {
-    value?: string;
-  };
-  HeartbeatReceivedOn?: {
-    value?: string;
-  };
+  ReaderId?: ReaderItemModel;
+  Status?: ReaderItemModel;
+  HeartbeatReceivedOn?: ReaderItemModel;
 }
 
 export interface TestModel {

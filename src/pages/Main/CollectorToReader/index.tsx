@@ -154,6 +154,24 @@ const CollectorToReader = (): React.ReactElement => {
 
   const readerData = reader?.data as ReaderModel;
 
+  const isReaderOnline = (() => {
+    if (
+      readerData &&
+      readerData.Status?.value !== READER_STATUS.OFFLINE &&
+      readerData.HeartbeatReceivedOn
+    ) {
+      const heartbeatReceivedOn =
+        readerData.HeartbeatReceivedOn.valueProvidedOn;
+      console.log(
+        moment(heartbeatReceivedOn),
+        moment(),
+        moment().diff(moment(heartbeatReceivedOn), "minutes")
+      );
+      return moment().diff(moment(heartbeatReceivedOn), "minutes") < 2;
+    }
+    return false;
+  })();
+
   return (
     <>
       <Helmet>
@@ -258,14 +276,15 @@ const CollectorToReader = (): React.ReactElement => {
                   <FormGroup>
                     <Label>Reader Status</Label>
                     <p>
-                      {readerData &&
-                      readerData.Status?.value === READER_STATUS.ONLINE ? (
+                      {isReaderOnline ? (
                         <FontAwesomeIcon icon={faCircleNotch} color="green" />
                       ) : (
                         <FontAwesomeIcon icon={faTimes} color="red" />
                       )}
                       <span className="ml-2">
-                        {readerData && readerData.Status?.value}
+                        {isReaderOnline
+                          ? READER_STATUS.ONLINE
+                          : READER_STATUS.OFFLINE}
                       </span>
                     </p>
                   </FormGroup>
@@ -282,7 +301,7 @@ const CollectorToReader = (): React.ReactElement => {
                   <Button
                     type="submit"
                     color="primary"
-                    // disabled={!collector || !reader}
+                    disabled={!collector || !reader}
                   >
                     Start Test
                   </Button>

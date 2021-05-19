@@ -6,12 +6,14 @@
   right: 0;
   bottom: 0;
   z-index: 1000000;
-  background-color: rgba(0, 0, 0, 0.01);
+  background-color: rgba(0, 0, 0, 0.1);
 
   .loading-indicator {
     position: absolute;
-    right: 20px;
-    bottom: 20px;
+    left: 50%;
+    top: 50%;
+    margin-top: -30px;
+    margin-left: -30px;
     width: 60px;
     height: 60px;
   }

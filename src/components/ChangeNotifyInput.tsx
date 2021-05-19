@@ -8,23 +8,23 @@ export interface ChangeNotifyInputProps extends InputProps {
 const ChangeNotifyInput = (
   props: ChangeNotifyInputProps
 ): React.ReactElement => {
-  const [typingTimeout, setTypingTimeout] =
-    useState<NodeJS.Timeout | null>(null);
+  // const [typingTimeout, setTypingTimeout] =
+  //   useState<NodeJS.Timeout | null>(null);
   const { onInputChanged, onChange, ...others } = props;
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (typingTimeout) {
-      clearTimeout(typingTimeout);
-    }
-    setTypingTimeout(
-      setTimeout(() => {
-        onInputChanged(event);
-      }, 2000)
-    );
-    onChange && onChange(event);
-  };
+  // const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   if (typingTimeout) {
+  //     clearTimeout(typingTimeout);
+  //   }
+  //   setTypingTimeout(
+  //     setTimeout(() => {
+  //       onInputChanged(event);
+  //     }, 2000)
+  //   );
+  //   onChange && onChange(event);
+  // };
 
-  return <Input onChange={handleChange} {...others} />;
+  return <Input onChange={onChange} onBlur={onInputChanged} {...others} />;
 };
 
 export default ChangeNotifyInput;

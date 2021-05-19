@@ -15,7 +15,10 @@ const SearchPatients = (): React.ReactElement => {
 
   const handleSearch = async (values: SearchFormValues) => {
     try {
-      const page = await User.findAll(dispatch, values);
+      const params = {
+        ...values,
+      } as SearchFormValues;
+      const page = await User.findAll(dispatch, params);
       setPage(page);
     } catch (error) {
       console.log(error);
@@ -24,7 +27,11 @@ const SearchPatients = (): React.ReactElement => {
 
   const handleContinueWithSelected = (values: UserModel) => {
     console.log(values);
-    history.push(`patient-to-collector/${values.emailAddress}`);
+    history.push(
+      `patient-to-collector/${encodeURIComponent(
+        values.emailAddress as string
+      )}`
+    );
   };
 
   const handleCreateNew = () => {

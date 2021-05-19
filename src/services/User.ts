@@ -10,6 +10,7 @@ export const findAll = async (
 ): Promise<PageModel> => {
   await dispatch(setLoading(true));
   try {
+    params.emailAddress = encodeURIComponent(params.emailAddress as string);
     const response = await AppApi.get("/user/user", {
       params,
     });

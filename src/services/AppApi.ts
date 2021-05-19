@@ -15,7 +15,7 @@ const AppApi = axios.create({
     "Content-Type": "application/x-www-form-urlencoded",
   },
   paramsSerializer: (params) => {
-    return Qs.stringify(params, { arrayFormat: "brackets" });
+    return Qs.stringify(params, { arrayFormat: "brackets", encode: true });
   },
 });
 
